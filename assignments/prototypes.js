@@ -6,10 +6,14 @@
   At the bottom of this file are 3 objects that all end up inheriting from Humanoid.  Use the objects at the bottom of the page to test your constructor functions.
   
   Each constructor function has unique properties and methods that are defined in their block comments below:
-*/ // inheritance
+*/ 
+
+// inheritance
 var inheritsFrom = function (child, parent) {
   child.prototype = Object.create(parent.prototype);
 };
+
+
 /*
   === GameObject ===
   * createdAt
@@ -17,10 +21,10 @@ var inheritsFrom = function (child, parent) {
   * dimensions (These represent the character's size in the video game)
   * destroy() // prototype method that returns: `${this.name} was removed from the game.`
 */
-var GameObject = function(createdAt, name, dimensions){
-  this.createdAt = createdAt,
-  this.name = name,
-  this.dimensions = dimensions
+function GameObject(attr){
+  this.createdAt = attr.createdAt,
+  this.name = attr.name,
+  this.dimensions = attr.dimensions
 };
 GameObject.prototype.destroy = function(){
   return `${this.name} was removed from the game.`;
@@ -31,13 +35,18 @@ GameObject.prototype.destroy = function(){
   * takeDamage() // prototype method -> returns the string '<object name> took damage.'
   * should inherit destroy() from GameObject's prototype
 */
-var CharacterStats = function(attr){
-  this.healthPoints = attr;
-}
+// CharacterStats.prototype = Object.create(GameObject.prototype);
+
+function CharacterStats(attrTwo){
+  GameObject.call(this, attrTwo);
+  this.healthPoints = attrTwo.healthPoints
+};
+inheritsFrom(CharacterStats, GameObject);
+
 CharacterStats.prototype.takeDamage = function(){
   return `${this.name} took damage.`;
 };
-inheritsFrom(CharacterStats, GameObject);
+
 
 /*
   === Humanoid (Having an appearance or character resembling that of a human.) ===
@@ -48,15 +57,19 @@ inheritsFrom(CharacterStats, GameObject);
   * should inherit destroy() from GameObject through CharacterStats
   * should inherit takeDamage() from CharacterStats
 */
-var Humanoid = function(team, weapons, language){
-  this.team = team,
-  this.weapons = weapons,
-  this.language = language
+
+function Humanoid(attrThree){
+  CharacterStats.call(this, attrThree);
+  this.team = attrThree.team,
+  this.weapons = attrThree.weapons,
+  this.language = attrThree.language
 };
+inheritsFrom(Humanoid, CharacterStats);
+
 Humanoid.prototype.greet = function(){
   return `${this.name} offers a greeting in ${this.language}.`;
 };
- inheritsFrom(Humanoid, CharacterStats);
+
 /*
   * √ Inheritance chain: GameObject -> CharacterStats -> Humanoid
   * Instances of Humanoid should have all of the same properties as CharacterStats and GameObject.
@@ -117,15 +130,15 @@ Humanoid.prototype.greet = function(){
   });
 
   console.log(mage.createdAt); // Today's date
-  // console.log(archer.dimensions); // { length: 1, width: 2, height: 4 }
-  // console.log(swordsman.healthPoints); // 15
-  // console.log(mage.name); // Bruce
-  // console.log(swordsman.team); // The Round Table
-  // console.log(mage.weapons); // Staff of Shamalama
-  // console.log(archer.language); // Elvish
-  // console.log(archer.greet()); // Lilith offers a greeting in Elvish.
-  // console.log(mage.takeDamage()); // Bruce took damage.
-  // console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
+  console.log(archer.dimensions); // { length: 1, width: 2, height: 4 }
+  console.log(swordsman.healthPoints); // 15
+  console.log(mage.name); // Bruce
+  console.log(swordsman.team); // The Round Table
+  console.log(mage.weapons); // Staff of Shamalama
+  console.log(archer.language); // Elvish
+  console.log(archer.greet()); // Lilith offers a greeting in Elvish.
+  console.log(mage.takeDamage()); // Bruce took damage.
+  console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
 
 
   // Stretch task: 
